@@ -1,0 +1,143 @@
+<div class="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg mt-1.5">
+  <h2 class="text-2xl font-bold mb-4">Create a Post</h2>
+
+  <form (ngSubmit)="onSubmit()" #postForm="ngForm" class="space-y-4">
+    <!-- Title -->
+    <div class="flex flex-col">
+      <label for="title" class="text-sm font-semibold mb-2">Title</label>
+      <input
+        type="text"
+        id="title"
+        [(ngModel)]="post.title"
+        name="title"
+        required
+        minlength="5"
+        maxlength="100"
+        class="border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-500 outline-none"
+        placeholder="Enter post title"
+        #title="ngModel"
+      />
+      <div
+        *ngIf="title.invalid && title.touched"
+        class="text-red-500 text-sm mt-1"
+      >
+        <span *ngIf="title.errors && title.errors['required']"
+          >Title is required.</span
+        >
+        <span *ngIf="title.errors && title.errors['minlength']"
+          >Title must be at least 5 characters.</span
+        >
+        <span *ngIf="title.errors && title.errors['maxlength']"
+          >Title cannot be more than 100 characters.</span
+        >
+      </div>
+    </div>
+
+    <!-- Short Description -->
+    <div class="flex flex-col">
+      <label for="shortDescription" class="text-sm font-semibold mb-2"
+        >Short Description</label
+      >
+      <textarea
+        id="shortDescription"
+        [(ngModel)]="post.description"
+        name="shortDescription"
+        required
+        minlength="10"
+        class="border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-500 outline-none"
+        rows="3"
+        placeholder="Write a short description"
+        #description="ngModel"
+      ></textarea>
+      <div
+        *ngIf="description.invalid && description.touched"
+        class="text-red-500 text-sm mt-1"
+      >
+        <span *ngIf="description.errors && description.errors['required']"
+          >Short description is required.</span
+        >
+        <span *ngIf="description.errors && description.errors['minlength']"
+          >Short description must be at least 10 characters.</span
+        >
+      </div>
+    </div>
+
+    <!-- Photo Upload -->
+    <div class="flex flex-col">
+      <label for="photo" class="text-sm font-semibold mb-2">Upload Photo</label>
+      <input
+        type="file"
+        id="photo"
+        (change)="onFileSelected($event)"
+        class="border border-gray-300 rounded-md px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+        accept="image/*"
+      />
+    </div>
+
+    <!-- Categories -->
+    <div class="flex flex-col">
+      <label for="categoryIds" class="text-sm font-semibold mb-2"
+        >Categories</label
+      >
+
+      <!-- Show loading indicator while categories are being fetched -->
+      <div *ngIf="loading" class="text-gray-500">Loading categories...</div>
+
+      <!-- Show the list of categories when loaded -->
+      <div *ngIf="!loading" class="border border-gray-300 rounded-md p-2">
+        <div
+          *ngFor="let category of categories$ | async"
+          class="flex items-center mb-2"
+        >
+          <input
+            type="checkbox"
+            [value]="category.id"
+            (change)="onCategoryChange($event, category.id)"
+            [checked]="post.categoryIds.includes(category.id)"
+            id="category-{{ category.id }}"
+            class="mr-2"
+          />
+          <label [for]="'category-' + category.id">{{ category.name }}</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col">
+      <label for="content" class="text-sm font-semibold mb-2">Content</label>
+      <textarea
+        id="content"
+        [(ngModel)]="post.content"
+        name="content"
+        required
+        minlength="20"
+        class="border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-500 outline-none"
+        rows="6"
+        placeholder="Write your post content"
+        #content="ngModel"
+      ></textarea>
+      <div
+        *ngIf="content.invalid && content.touched"
+        class="text-red-500 text-sm mt-1"
+      >
+        <span *ngIf="content.errors && content.errors['required']"
+          >Content is required.</span
+        >
+        <span *ngIf="content.errors && content.errors['minlength']"
+          >Content must be at least 20 characters.</span
+        >
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        [disabled]="!postForm.valid"
+        class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-600 focus:ring focus:ring-blue-300 disabled:bg-blue-400 focus:outline-none"
+      >
+        Create Post
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,74 @@
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <!-- Featured Image -->
+  <img
+    [src]="post.futuredImageUrl"
+    [routerLink]="['/blog', post.id]"
+    alt="Featured Image"
+    class="w-full h-48 object-cover cursor-pointer"
+  />
+
+  <!-- Post Content -->
+  <div class="p-4">
+    <!-- Title -->
+    <h2
+      [routerLink]="['/blog', post.id]"
+      class="text-xl font-semibold text-gray-800 h-[60px] cursor-pointer hover:text-blue-500"
+    >
+      {{ post.title }}
+    </h2>
+
+    <!-- Short Description -->
+    <p class="text-gray-600 mt-2 h-[50px]">
+      {{ post.shortDescription }}
+    </p>
+
+    <!-- Categories -->
+    <div class="mt-2 flex flex-wrap">
+      <span
+        *ngFor="let category of post.categories"
+        class="bg-blue-100 text-blue-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded cursor-default"
+      >
+        {{ category }}
+      </span>
+    </div>
+
+    <!-- Metadata -->
+    <div class="flex items-center justify-between mt-4">
+      <!-- Author -->
+      <p class="text-sm text-gray-500">
+        By
+        <a
+          class="hover:text-blue-500 hover:font-semibold"
+          [routerLink]="['/profile', post.authorId]"
+          ><span>{{ post.authorFullName }}</span></a
+        >
+      </p>
+
+      <!-- Creation Date -->
+      <p class="text-sm text-gray-500">
+        {{ post.createdAt | date : "mediumDate" }}
+      </p>
+    </div>
+
+    <!-- Full Content Link -->
+    <div class="mt-4 flex flex-row justify-between items-center">
+      <a [routerLink]="['/blog', post.id]" class="text-blue-500 hover:underline"
+        >Read more</a
+      >
+      <a
+        *ngIf="
+          userDetail.roles.includes('Admin') || post.authorId === userDetail.id
+        "
+        [matMenuTriggerFor]="menu"
+        class="flex gap-2 cursor-pointer items-center"
+      >
+        <mat-icon class="hover:shadow-md rounded-md">more_horiz</mat-icon>
+      </a>
+      <mat-menu #menu="matMenu">
+        <button (click)="deletePost()" mat-menu-item>
+          <mat-icon>delete_forever</mat-icon><span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>

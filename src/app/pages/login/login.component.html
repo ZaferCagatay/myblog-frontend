@@ -1,0 +1,106 @@
+<div class="h-screen flex items-center justify-center relative">
+  <div
+    class="shadow-md rounded-md p-5 bg-white sm:h-2/5 sm:w-1/4 z-50 absolute w-full"
+    *ngIf="show2faPanel"
+  >
+    <div class="flex justify-end">
+      <button (click)="show2faPanel = false" class="close-btn">&times;</button>
+    </div>
+    <div class="py-4">
+      <h1 class="font-bold py-2">Enter OTP</h1>
+      <h6 class="text-slate-600 text-base">
+        Please enter the OTP sent to your email
+      </h6>
+    </div>
+
+    <div class="flex flex-col space-y-4">
+      <input
+        [(ngModel)]="otpCode"
+        type="text"
+        placeholder="Enter OTP"
+        class="border border-gray-300 rounded-sm p-2"
+      />
+      <button
+        class="w-full mt-3 border-slate-200 rounded-md py-2 px-3 bg-blue-600 text-white font-bold hover:bg-blue-700"
+        (click)="verify2fa()"
+      >
+        Verify OTP
+      </button>
+    </div>
+  </div>
+
+  <!-- The overlay -->
+  <div
+    class="fixed inset-0 bg-gray-800 bg-opacity-50 z-40"
+    *ngIf="show2faPanel"
+  ></div>
+
+  <form
+    class="shadow-md rounded-md p-5 bg-white sm:w-1/5 w-full"
+    [formGroup]="form"
+    (ngSubmit)="login()"
+  >
+    <div class="py-4">
+      <h1 class="font-bold py-2">Login</h1>
+      <h6 class="text-slate-600 text-base">Login to your account</h6>
+    </div>
+
+    <mat-form-field apperance="fill" class="w-full">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        formControlName="email"
+        placeholder="Email"
+        class="rounded-sm"
+      />
+      <mat-icon matPrefix>email</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field apperance="fill" class="w-full">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        formControlName="password"
+        type="{{ hide ? 'password' : 'text' }}"
+        placeholder="Password"
+      />
+      <mat-icon matPrefix>lock</mat-icon>
+      <mat-icon (click)="hide = !hide" matSuffix>{{
+        hide ? "visibility_off" : "visibility"
+      }}</mat-icon>
+    </mat-form-field>
+
+    <a
+      routerLink="/forgot-password"
+      class="text-sm font-medium hover:text-blue-500"
+      >Forgot Password ?</a
+    >
+
+    <button
+      [disabled]="!form.valid || isSubmmitting"
+      class="w-full mt-3 border-slate-200 rounded-md disabled:bg-blue-400 py-2 px-3 bg-blue-600 text-white font-bold hover:bg-blue-700"
+      type="submit"
+    >
+      <p
+        *ngIf="isSubmmitting"
+        class="flex justify-center items-center space-x-20"
+      >
+        Logging in
+        <span>
+          <span class="dot"></span><span class="dot"></span
+          ><span class="dot"></span
+        ></span>
+      </p>
+      <p *ngIf="!isSubmmitting">Login</p>
+    </button>
+
+    <div class="mt-4 flex flex-row justify-between items-center px-2">
+      <span class="text-slate-600 text-sm">Don't have an account? </span>
+      <a
+        class="text-blue-500 hover:text-blue-700 text-sm"
+        [routerLink]="['/register']"
+        >Register</a
+      >
+    </div>
+  </form>
+</div>

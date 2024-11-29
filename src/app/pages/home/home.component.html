@@ -1,0 +1,66 @@
+@if(authService.getUserDetail()){
+<div class="container mx-auto mt-5 p-9 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="col-span-2">
+    <div>
+      <h1 class="text-3xl font-bold mb-6 text-left border-b-2 p-2">
+        Blog Posts
+      </h1>
+      <h6 *ngIf="selectedCategoryName != null" class="mb-4 text-left">
+        Selected Category:
+        <span class="font-semibold text-blue-400">{{
+          selectedCategoryName
+        }}</span>
+      </h6>
+    </div>
+
+    @if(isSelectedCategoryEmpty){
+    <div>
+      <span class="text-gray-400"
+        >There is no post found in this category, be first to post it!</span
+      >
+    </div>
+    }@else {
+    <!-- Use async pipe to subscribe to blogPosts$ -->
+    <div *ngIf="blogPosts$ | async as blogPosts; else loading">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Loop through blog posts -->
+        <app-blog-post-card
+          *ngFor="let post of blogPosts"
+          [post]="post"
+          [userDetail]="userDetail"
+          (postDeleted)="onPostDeleted($event)"
+        ></app-blog-post-card>
+      </div>
+    </div>
+    }
+  </div>
+
+  <app-sidebar
+    (categoryChoiced)="onCategoryChange($event)"
+    (categoryNotChoiced)="categoryRemoved($event)"
+  ></app-sidebar>
+
+  <!-- Loading State -->
+  <ng-template #loading>
+    <p class="text-center">Loading blog posts...</p>
+  </ng-template>
+</div>
+}@else {
+<div class="flex items-center flex-col pt-56 h-screen">
+  <div class="h-screen">
+    <h1 class="text-4xl text-center font-bold my-10">
+      Welcome to <span class="text-5xl text-green-800">MyApp</span>
+    </h1>
+    <div class="flex flex-col items-center gap-5 justify-center">
+      <h1 class="text-2xl">You are not logged in</h1>
+      <a routerLink="/login">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+        >
+          Login
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+}
