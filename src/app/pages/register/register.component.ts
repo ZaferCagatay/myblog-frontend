@@ -45,18 +45,19 @@ export class RegisterComponent implements OnInit {
   router = inject(Router);
   passwordHide!: boolean;
   confirmPasswordHide!: boolean;
+  isSubmmitting = false;
   errors!: ValidationError[];
 
   register() {
+    this.isSubmmitting = true;
     this.authService.register(this.registerForm.value).subscribe({
       next: (response) => {
-        console.log(response);
-
         this.matSnackBar.open(response.message, 'Close', {
           duration: 3000,
           horizontalPosition: 'center',
         });
         this.router.navigate(['/login']);
+        this.isSubmmitting = false;
       },
       error: (err: HttpErrorResponse) => {
         this.errors = err!.error;
@@ -66,6 +67,7 @@ export class RegisterComponent implements OnInit {
             horizontalPosition: 'center',
           });
         }
+        this.isSubmmitting = false;
       },
       complete: () => console.log('Registered successfully!'),
     });

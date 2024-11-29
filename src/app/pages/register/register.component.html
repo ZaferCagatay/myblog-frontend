@@ -66,11 +66,21 @@
     </div>
 
     <button
-      [disabled]="!registerForm.valid"
+      [disabled]="!registerForm.valid || isSubmmitting"
       class="w-full border-slate-200 rounded-md disabled:bg-blue-400 py-2 px-3 bg-blue-600 text-white hover:bg-blue-700"
       type="submit"
     >
-      Register
+      <p
+        *ngIf="isSubmmitting"
+        class="flex justify-center items-center space-x-20"
+      >
+        Registering
+        <span>
+          <span class="dot"></span><span class="dot"></span
+          ><span class="dot"></span
+        ></span>
+      </p>
+      <p *ngIf="!isSubmmitting">Register</p>
     </button>
 
     <div class="mt-4">
